@@ -415,4 +415,4 @@ function goToChunkSWCorner()
 end
 
 
-return { setDir = setDir, forceForward = forceForward, faceDir = faceDir, getCurrentCoordinates = getCurrentCoordinates, goToChunkSWCorner = goToChunkSWCorner, goTo = goTo, back = back, forward = forward, up = up, down = down, right = right, left = left, handleHangingTransaction = handleHangingTransaction, updateCoordinates = updateCoordinates }
+return { getDir = utils.getDir, setDir = setDir, forceForward = forceForward, faceDir = faceDir, getCurrentCoordinates = getCurrentCoordinates, goToChunkSWCorner = goToChunkSWCorner, goTo = goTo, back = back, forward = forward, up = up, down = down, right = right, left = left, handleHangingTransaction = handleHangingTransaction, updateCoordinates = updateCoordinates }
