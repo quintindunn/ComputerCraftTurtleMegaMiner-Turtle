@@ -1,5 +1,6 @@
 local logger = require("/api/logger").getLogger("Movement")
 local utils = require("/api/utils")
+local config = require("/api/config")
 
 local rX = 0
 local rY = 0
@@ -15,28 +16,28 @@ function setTransaction(action)
     transaction.fuelLevel = fuelLevel
     transaction.action = action
     
-    local f = fs.open("/api/state/currentTransaction.json", "w")
+    local f = fs.open(config.STATE_DIR .. "/currentTransaction.json", "w")
     f.write(textutils.serializeJSON(transaction))
     f.close()
 end
 
 function getNewCoordinates(action)
-    local fExists = fs.exists("/api/state/dir")
+    local fExists = fs.exists(config.STATE_DIR .. "/dir")
     if not fExists then
         utils.calibrateOrientation()
     end
 
-    local f = fs.open("/api/state/dir", "r")
+    local f = fs.open(config.STATE_DIR .. "/dir", "r")
     local dir = tonumber(f.readAll())
     f.close()
 
-    local jExists = fs.exists("/api/state/coordinates.json", "r")
+    local jExists = fs.exists(config.STATE_DIR .. "/coordinates.json", "r")
     if not jExists then
         logger("Error: Current coordinates unknown!")
         return
     end
 
-    local j = fs.open("/api/state/coordinates.json", "r")
+    local j = fs.open(config.STATE_DIR .. "/coordinates.json", "r")
     local contents = j.readAll()
     j.close()
 
@@ -83,25 +84,25 @@ function getNewCoordinates(action)
 end
 
 function handleHangingTransaction()
-    local fExists = fs.exists("/api/state/currentTransaction.json")
+    local fExists = fs.exists(config.STATE_DIR .. "/currentTransaction.json")
     if not fExists then
         return
     end
 
-    local f = fs.open("/api/state/currentTransaction.json", "r")
+    local f = fs.open(config.STATE_DIR .. "/currentTransaction.json", "r")
     local contents = f.readAll()
     f.close()
     local json = textutils.unserializeJSON(contents)
     
     if json == nil then
         logger("Warning: Couldn't read transaction: `" .. contents .. "`, Unknown behavior!")
-        fs.delete("/api/state/currentTransaction.json")
+        fs.delete(config.STATE_DIR .. "/currentTransaction.json")
         return
     end
 
     if json["fuelLevel"] == nil then
         logger("Warning: Couldn't read fuelLevel from transaction! Cannot validate location!")
-        fs.delete("/api/state/currentTransaction.json")
+        fs.delete(config.STATE_DIR .. "/currentTransaction.json")
         return
     end
 
@@ -113,14 +114,14 @@ function handleHangingTransaction()
         logger("Warning: Transaction action couldn't be read!")
         if transactionFuelLevel ~= currentFuelLevel then
             logger("Warning: Cannot read action, and fuel levels don't match! Lost location!")
-            fs.delete("/api/state/currentTransaction.json")
+            fs.delete(config.STATE_DIR .. "/currentTransaction.json")
             return
         end
     end
 
     if currentFuelLevel == transactionFuelLevel then
         logger("Info: Did not lose location!")
-        fs.delete("/api/state/currentTransaction.json")
+        fs.delete(config.STATE_DIR .. "/currentTransaction.json")
         return
     end
 
@@ -137,17 +138,17 @@ function handleHangingTransaction()
         newCoordinates = getNewCoordinates("down")
     end
     updateCoordinates(newCoordinates)
-    fs.delete("/api/state/currentTransaction.json")
+    fs.delete(config.STATE_DIR .. "/currentTransaction.json")
 end
 
 function updateCoordinates(newCoordinates)
-    if fs.exists("/api/state/coordinates.json") then
-        if fs.exists("/api/state/coordinates.json.copy") then
-            fs.delete("/api/state/coordinates.json.copy")
+    if fs.exists(config.STATE_DIR .. "/coordinates.json") then
+        if fs.exists(config.STATE_DIR .. "/coordinates.json.copy") then
+            fs.delete(config.STATE_DIR .. "/coordinates.json.copy")
         end
-        fs.copy("/api/state/coordinates.json", "/api/state/coordinates.json.copy")
+        fs.copy(config.STATE_DIR .. "/coordinates.json", config.STATE_DIR .. "/coordinates.json.copy")
     end
-    local f = fs.open("/api/state/coordinates.json", "w")
+    local f = fs.open(config.STATE_DIR .. "/coordinates.json", "w")
     f.write(textutils.serializeJSON(newCoordinates))
     f.close()    
 end
@@ -159,7 +160,7 @@ function up()
     if worked then
         updateCoordinates(getNewCoordinates("up"))
     end
-    fs.delete("/api/state/currentTransaction.json")
+    fs.delete(config.STATE_DIR .. "/currentTransaction.json")
 
     return worked
 end
@@ -171,7 +172,7 @@ function down()
     if worked then
         updateCoordinates(getNewCoordinates("down"))
     end
-    fs.delete("/api/state/currentTransaction.json")
+    fs.delete(config.STATE_DIR .. "/currentTransaction.json")
 
     return worked
 end
@@ -197,7 +198,7 @@ function forward()
     if worked then
         updateCoordinates(getNewCoordinates("forward"))
     end
-    fs.delete("/api/state/currentTransaction.json")
+    fs.delete(config.STATE_DIR .. "/currentTransaction.json")
 
     return worked
 end
@@ -209,19 +210,19 @@ function back()
     if worked then
         updateCoordinates(getNewCoordinates("back"))
     end
-    fs.delete("/api/state/currentTransaction.json")
+    fs.delete(config.STATE_DIR .. "/currentTransaction.json")
 
     return worked
 end
 
 function setDir(dir)
-    local f = fs.open("/api/state/dir", "w")
+    local f = fs.open(config.STATE_DIR .. "/dir", "w")
     f.write(dir)
     f.close()
 end
 
 function right()
-    local f = fs.open("/api/state/dir", "r")
+    local f = fs.open(config.STATE_DIR .. "/dir", "r")
     local dir = tonumber(f.readAll()) + 1
     f.close()
 
@@ -229,14 +230,14 @@ function right()
         dir = 1
     end
 
-    local f = fs.open("/api/state/dir", "w")
+    local f = fs.open(config.STATE_DIR .. "/dir", "w")
     f.write(dir)
     f.close()
     return turtle.turnRight()
 end
 
 function left()
-    local f = fs.open("/api/state/dir", "r")
+    local f = fs.open(config.STATE_DIR .. "/dir", "r")
     local dir = tonumber(f.readAll()) - 1
     f.close()
 
@@ -244,20 +245,20 @@ function left()
         dir = 4
     end
 
-    local f = fs.open("/api/state/dir", "w")
+    local f = fs.open(config.STATE_DIR .. "/dir", "w")
     f.write(dir)
     f.close()
     return turtle.turnLeft()
 end
 
 function getCurrentCoordinates()
-    local fExists = fs.exists("/api/state/coordinates.json", "r")
+    local fExists = fs.exists(config.STATE_DIR .. "/coordinates.json", "r")
     if not fExists then
         logger("Error: Current coordinates unknown!")
         return {-99999999, -99999999, -99999999}
     end
 
-    local f = fs.open("/api/state/coordinates.json", "r")
+    local f = fs.open(config.STATE_DIR .. "/coordinates.json", "r")
     local contents = f.readAll()
     f.close()
 

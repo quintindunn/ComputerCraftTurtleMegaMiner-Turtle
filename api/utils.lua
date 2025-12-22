@@ -50,9 +50,9 @@ function doRefuelIfNeeded()
 end
 
 function getDir()
-    local dirFileExists = fs.exists("/api/state/dir")
+    local dirFileExists = fs.exists(config.STATE_DIR .. "/dir")
     if dirFileExists then
-        local fdir = fs.open("/api/state/dir", "r")
+        local fdir = fs.open(config.STATE_DIR .. "/dir", "r")
         local dir = tonumber(fdir.readAll())
         return dir
     end
@@ -61,18 +61,18 @@ function getDir()
 end
 
 function dumpState()
-    local dirFileExists = fs.exists("/api/state/dir")
-    local coordinateFileExists = fs.exists("/api/state/coordinates.json")
+    local dirFileExists = fs.exists(config.STATE_DIR .. "/dir")
+    local coordinateFileExists = fs.exists(config.STATE_DIR .. "/coordinates.json")
 
     local output = "Fuel Level: " .. turtle.getFuelLevel() .. "\n"
     if dirFileExists then
-        local fdir = fs.open("/api/state/dir", "r")
+        local fdir = fs.open(config.STATE_DIR .. "/dir", "r")
         local dir = tonumber(fdir.readAll())
         output = output .. "Facing: " .. numericalOrientationToString(dir) .. "\n"
     end
 
     if coordinateFileExists then
-        local fcoordinates = fs.open("/api/state/coordinates.json", "r")
+        local fcoordinates = fs.open(config.STATE_DIR .. "/coordinates.json", "r")
         local contents = fcoordinates.readAll()
         fcoordinates.close()
 
