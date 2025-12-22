@@ -12,3 +12,4 @@ movement.handleHangingTransaction()
 local state = utils.dumpState()
 
 print(state)
+print("Sample")
