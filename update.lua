@@ -1,6 +1,6 @@
+shell.run("delete /api/")
 shell.run("delete /excavator/")
 shell.run("delete /tools/")
 shell.run("delete /startup.lua")
 shell.run("delete /setup.lua")
-shell.run("delete /api/*.lua")
 shell.run("/installer.lua")
