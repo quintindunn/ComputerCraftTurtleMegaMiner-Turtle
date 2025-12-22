@@ -1,0 +1,7 @@
+shell.run("wget https://gist.githubusercontent.com/SquidDev/e0f82765bfdefd48b0b15a5c06c0603b/raw/clone.min.lua")
+shell.run("clone.min https://github.com/quintindunn/ComputerCraftTurtleMegaMiner-Turtle")
+shell.run("cd ComputerCraftTurtleMegaMiner-Turtle")
+shell.run("move * ../")
+shell.run("cd /")
+shell.run("delete ComputerCraftTurtleMegaMiner-Turtle")
+shell.run("delete clone.min.lua")

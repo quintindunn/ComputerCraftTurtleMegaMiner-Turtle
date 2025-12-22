@@ -1,0 +1,5 @@
+shell.run("delete /api/")
+shell.run("delete /excavator/")
+shell.run("delete /tools/")
+shell.run("delete /startup.lua")
+shell.run("delete /setup.lua")
