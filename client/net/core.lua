@@ -6,10 +6,10 @@ ws = nil
 
 function connect()
     ws = http.websocket(config.WS_URL)
-
     if not ws then
         print("Couldn't connect to websocket!")
     end
+    return ws
 end
 
 function verifyConnected()
@@ -63,4 +63,8 @@ function disconnect()
     ws.close()
 end
 
-return { sendIterationStart = sendIterationStart, sendIterationEnd = sendIterationEnd, getWS = getWS, sendState = sendState, disconnect = disconnect, connect = connect, verifyConnected = verifyConnected, sendJSON = sendJSON }
+function clearWS()
+    ws = nil
+end
+
+return { clearWS = clearWS, sendIterationStart = sendIterationStart, sendIterationEnd = sendIterationEnd, getWS = getWS, sendState = sendState, disconnect = disconnect, connect = connect, verifyConnected = verifyConnected, sendJSON = sendJSON }
