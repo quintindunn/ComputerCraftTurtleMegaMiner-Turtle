@@ -55,7 +55,7 @@ function moveLinear(nx, ny, nz)
         error("Cannot change both X-axis and Z-axis")
     end
 
-    -- Go to correct Y
+    -- Go to correct Y if it needs to go up
     if dy > 0 then
         dy = math.abs(dy)
         local i = 0
@@ -64,18 +64,6 @@ function moveLinear(nx, ny, nz)
                 turtle.digUp()
             end
             if not up() then
-                i = i - 1
-            end
-            i = i + 1
-        end
-    elseif dy < 0 then
-        dy = math.abs(dy)
-        local i = 0
-        while i < dy do
-            if turtle.detectDown() then
-                turtle.digDown()
-            end
-            if not down() then
                 i = i - 1
             end
             i = i + 1
@@ -145,6 +133,20 @@ function moveLinear(nx, ny, nz)
                     movement.left()
                     movement.left()
                 end
+            end
+            i = i + 1
+        end
+    end
+
+    if dy < 0 then -- Go to correct y if it needs to go down
+        dy = math.abs(dy)
+        local i = 0
+        while i < dy do
+            if turtle.detectDown() then
+                turtle.digDown()
+            end
+            if not down() then
+                i = i - 1
             end
             i = i + 1
         end
