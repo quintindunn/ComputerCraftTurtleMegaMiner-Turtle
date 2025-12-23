@@ -25,9 +25,23 @@ function sendJSON(packet)
     ws.send(serialized)
 end
 
+function sendIterationStart()
+    local packet = {
+        type = "iterationStart"
+    }
+    sendJSON(packet)
+end
+
+function sendIterationEnd()
+    local packet = {
+        type = "iterationEnd"
+    }
+    sendJSON(packet)
+end
+
 function sendState()
     local coordinates = movement.getCurrentCoordinates()
-    local state = {
+    local packet = {
         role = "slave",
         type = "sendState",
         x = coordinates[1],
@@ -37,7 +51,7 @@ function sendState()
         name = getName.getName(),
         hash = getName.getHash()
     }
-    sendJSON(state)
+    sendJSON(packet)
 end
 
 function getWS()
@@ -49,4 +63,4 @@ function disconnect()
     ws.close()
 end
 
-return { getWS = getWS, sendState = sendState, disconnect = disconnect, connect = connect, verifyConnected = verifyConnected, sendJSON = sendJSON }
+return { sendIterationStart = sendIterationStart, sendIterationEnd = sendIterationEnd, getWS = getWS, sendState = sendState, disconnect = disconnect, connect = connect, verifyConnected = verifyConnected, sendJSON = sendJSON }

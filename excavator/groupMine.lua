@@ -1,12 +1,15 @@
 local movement = require("/api/movement")
 local logger = require("/api/logger").getLogger("Main")
+local netCore = require("/client/net/core")
 
 function notifyIterationStart()
     logger("Starting Iteration")
+    netCore.sendIterationStart()
 end
 
 function notifyIterationEnd()
     logger("Ending iteration")
+    netCore.sendIterationEnd()
 end
 
 function iteration()
