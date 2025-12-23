@@ -3,6 +3,7 @@ local logger = require("/api/logger").getLogger("Main")
 local netCore = require("/client/net/core")
 local utils = require("/api/utils")
 local homeUtils = require("/api/homeLocation")
+local config = require("/api/config")
 
 function notifyIterationStart()
     logger("Starting Iteration")
@@ -38,16 +39,11 @@ function iteration()
     notifyIterationEnd()
 end
 
-function goHome()
+function moveLinear(nx, ny, nz)
     local coordinates = movement.getCurrentCoordinates()
     local cx = coordinates[1]
     local cy = coordinates[2]
     local cz = coordinates[3]
-
-    local homeCoordinates = homeUtils.getHome()
-    local nx = homeCoordinates[1]
-    local ny = homeCoordinates[2]
-    local nz = homeCoordinates[3]
 
     local dx = nx - cx
     local dy = ny - cy
@@ -153,7 +149,39 @@ function goHome()
             i = i + 1
         end
     end
+end
 
+function setRestorePoint()
+    local coordinates = movement.getCurrentCoordinates()
+    local f = fs.open(config.STATE_DIR .. "/restorePoint", "w")
+    f.write(textutils.serializeJSON(coordinates))
+    f.close()
+end
+
+function goToRestorePoint()
+    local fExists = fs.exists(config.STATE_DIR .. "/restorePoint")
+    
+    if not fExists then
+        logger("Warning restore point doesn't exist!")
+        return
+    end
+
+    local f = fs.open(config.STATE_DIR .. "/restorePoint", "r")
+    local content = f.readAll()
+    f.close()
+
+    local coordinates = textutils.unserializeJSON(content)
+
+    moveLinear(coordinates[1], coordinates[2], coordinates[3])
+end
+
+function goHome()
+    setRestorePoint()
+    local homeCoordinates = homeUtils.getHome()
+    local nx = homeCoordinates[1]
+    local ny = homeCoordinates[2]
+    local nz = homeCoordinates[3]
+    moveLinear(nx, ny, nz)
 end
 
 function refuel()
@@ -172,4 +200,4 @@ function refuel()
     movement.goTo(initialCoordinates[1], initialCoordinates[2], initialCoordinates[3])
 end
 
-return { iteration = iteration, refuel = refuel, goHome = goHome }
+return { goToRestorePoint = goToRestorePoint, iteration = iteration, refuel = refuel, moveLinear = moveLinear, goHome = goHome }

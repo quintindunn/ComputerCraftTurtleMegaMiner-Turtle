@@ -47,7 +47,12 @@ function rebootHandler()
 end
 
 function goHomeHandler()
+    logger("Going home!")
     excavator.goHome()
+end
+
+function restoreHandler()
+    excavator.goToRestorePoint()
 end
 
 function executeHandler(json)
@@ -103,6 +108,8 @@ function handle(msg)
         executeHandler(json)
     elseif msgType == "home" then
         goHomeHandler(json)
+    elseif msgType == "restore" then
+        restoreHandler(json)
     end
 
 end
