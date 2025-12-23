@@ -26,7 +26,7 @@ function dumpInventory()
 
     for i = 2, 16 do
         turtle.select(i)
-        turtle.drop(64)
+        turtle.dropUp(64)
     end
 
     turtle.select(initialSlot)

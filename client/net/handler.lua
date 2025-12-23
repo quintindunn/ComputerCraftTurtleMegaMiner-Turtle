@@ -7,6 +7,10 @@ function moveForwardHandler()
     movement.forward()
 end
 
+function moveUpHandler()
+    movement.up()
+end
+
 function moveBackHandler()
     movement.back()
 end
@@ -34,6 +38,9 @@ function handle(msg)
 
     if msgType == "moveForward" then
         moveForwardHandler(msg)
+        netCore.sendState()
+    elseif msgType == "moveUp" then
+        moveUpHandler(msg)
         netCore.sendState()
     elseif msgType == "moveBack" then
         moveBackHandler(msg)
