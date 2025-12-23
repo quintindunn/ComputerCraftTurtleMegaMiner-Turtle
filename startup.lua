@@ -13,5 +13,11 @@ local state = utils.dumpState()
 
 print(state)
 
+if not fs.exists("/state/role") then
+    local f = fs.open("/state/role", "w")
+    f.write("miner")
+    f.close()
+end
+
 shell.run("/update.lua")
 shell.run("/main.lua")
