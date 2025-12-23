@@ -24,18 +24,11 @@ end
 function dumpInventory()
     local initialSlot = turtle.getSelectedSlot()
 
-    turtle.select(2)
-    if turtle.detect() then
-        turtle.dig()
-    end
-    turtle.place()
-
-    for i = 5, 16 do
+    for i = 2, 16 do
         turtle.select(i)
         turtle.drop(64)
     end
-    turtle.select(2)
-    turtle.dig()
+
     turtle.select(initialSlot)
 end
 

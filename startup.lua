@@ -12,3 +12,5 @@ movement.handleHangingTransaction()
 local state = utils.dumpState()
 
 print(state)
+
+shell.run("/main.lua")

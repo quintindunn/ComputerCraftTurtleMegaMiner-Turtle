@@ -1,6 +1,7 @@
 local movement = require("/api/movement")
 local netCore = require("/client/net/core")
 local excavator = require("/excavator/groupMine")
+local utils = require("/api/utils")
 
 function moveForwardHandler()
     movement.forward()
@@ -12,6 +13,10 @@ end
 
 function iterateHandler()
     excavator.iteration()
+end
+
+function dumpUpHandler()
+    utils.dumpInventory()
 end
 
 
@@ -36,6 +41,8 @@ function handle(msg)
     elseif msgType == "iterate" then
         iterateHandler(msg)
         netCore.sendState()
+    elseif msgType == "dumpUp" then
+        dumpUpHandler(msg)
     end
 
 end
