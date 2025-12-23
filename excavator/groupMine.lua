@@ -179,8 +179,10 @@ function goToRestorePoint()
     moveLinear(coordinates[1], coordinates[2], coordinates[3])
 end
 
-function goHome()
-    setRestorePoint()
+function goHome(SkipSetRestorePoint)
+    if not SkipSetRestorePoint then
+        setRestorePoint()
+    end
     local homeCoordinates = homeUtils.getHome()
     local nx = homeCoordinates[1]
     local ny = homeCoordinates[2]
@@ -191,7 +193,7 @@ end
 function refuel()
     notifyIterationStart()
     local initialCoordinates = movement.getCurrentCoordinates()
-    goHome()
+    goHome(true)
 
     local initialSlot = turtle.getSelectedSlot()
 
