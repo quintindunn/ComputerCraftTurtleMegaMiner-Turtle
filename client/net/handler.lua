@@ -55,6 +55,10 @@ function restoreHandler()
     excavator.goToRestorePoint()
 end
 
+function refuelHandler()
+    excavator.refuel()
+end
+
 function executeHandler(json)
     local command = json["command"]
     
@@ -110,6 +114,8 @@ function handle(msg)
         goHomeHandler(json)
     elseif msgType == "restore" then
         restoreHandler(json)
+    elseif msgType == "refuel" then
+        refuelHandler(json)
     end
 
 end

@@ -40,6 +40,7 @@ function iteration()
 end
 
 function moveLinear(nx, ny, nz)
+    notifyIterationStart()
     local coordinates = movement.getCurrentCoordinates()
     local cx = coordinates[1]
     local cy = coordinates[2]
@@ -151,6 +152,7 @@ function moveLinear(nx, ny, nz)
             i = i + 1
         end
     end
+    notifyIterationEnd()
 end
 
 function setRestorePoint()
@@ -187,6 +189,7 @@ function goHome()
 end
 
 function refuel()
+    notifyIterationStart()
     local initialCoordinates = movement.getCurrentCoordinates()
     goHome()
 
@@ -200,6 +203,7 @@ function refuel()
 
     turtle.select(initialSlot)
     movement.goTo(initialCoordinates[1], initialCoordinates[2], initialCoordinates[3])
+    notifyIterationEnd()
 end
 
 return { goToRestorePoint = goToRestorePoint, iteration = iteration, refuel = refuel, moveLinear = moveLinear, goHome = goHome }
