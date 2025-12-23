@@ -2,7 +2,8 @@ local core = require("/client/net/core")
 local handler = require("/client/net/handler")
 
 function runLoop()
-    local ws = core.getWS()
+    local ws = core.connect()
+    core.sendState()
 
     while true do
         local ok, msg = pcall(ws.receive, ws, 1)
@@ -10,7 +11,7 @@ function runLoop()
             core.clearWS()
             repeat
                 ws = core.connect()
-            until core.getWS()
+            until ws
         elseif msg then
             handler.handle(msg)
         end
