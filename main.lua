@@ -1,6 +1,7 @@
-local netUtils = require("/api/net/util")
+local netCore = require("/api/net/core")
+local eventLoop = require("/api/net/eventLoop")
 
 
-netUtils.connect()
-netUtils.sendState()
-netUtils.disconnect()
+netCore.connect()
+netCore.sendState()
+eventLoop.runLoop()

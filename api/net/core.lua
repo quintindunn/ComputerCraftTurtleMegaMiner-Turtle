@@ -28,6 +28,7 @@ end
 function sendState()
     local coordinates = movement.getCurrentCoordinates()
     local state = {
+        role = "slave",
         type = "sendState",
         x = coordinates[1],
         y = coordinates[2],
@@ -39,9 +40,13 @@ function sendState()
     sendJSON(state)
 end
 
+function getWS()
+    return ws
+end
+
 function disconnect()
     verifyConnected()
     ws.close()
 end
 
-return { sendState = sendState, disconnect = disconnect, connect = connect, verifyConnected = verifyConnected, sendJSON = sendJSON }
+return { getWS = getWS, sendState = sendState, disconnect = disconnect, connect = connect, verifyConnected = verifyConnected, sendJSON = sendJSON }
