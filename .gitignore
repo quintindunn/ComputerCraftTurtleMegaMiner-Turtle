@@ -2,3 +2,5 @@ state/coordinates.json
 state/coordinates.json.copy
 state/dir
 state/name
+state/home
+.cache/*

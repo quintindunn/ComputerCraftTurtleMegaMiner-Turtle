@@ -2,6 +2,7 @@ local movement = require("/api/movement")
 local netCore = require("/client/net/core")
 local excavator = require("/excavator/groupMine")
 local utils = require("/api/utils")
+local homeUtils = require("/api/homeLocation")
 local logger = require("/api/logger").getLogger("Handler")
 
 function moveForwardHandler()
@@ -34,6 +35,10 @@ function dumpUpHandler()
     utils.dumpInventory()
 end
 
+function setHomeHandler()
+    logger("Setting home")
+    homeUtils.setHome()
+end
 
 function handle(msg)
     local json = textutils.unserializeJSON(msg)
@@ -64,6 +69,8 @@ function handle(msg)
         netCore.sendState()
     elseif msgType == "dumpUp" then
         dumpUpHandler(msg)
+    elseif msgType == "setHome" then
+        setHomeHandler(msg)
     end
 
 end
