@@ -11,6 +11,8 @@ end
 
 function iteration()
     notifyIterationStart()
+    movement.forceForward()
+
     local startCoordinates = movement.getCurrentCoordinates()
 
     local failCount = 0
@@ -31,4 +33,4 @@ function iteration()
     notifyIterationEnd()
 end
 
-iteration()
+return { iteration = iteration }

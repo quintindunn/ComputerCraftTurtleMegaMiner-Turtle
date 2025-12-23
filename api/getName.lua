@@ -40,10 +40,12 @@ function setNameIfNotSet()
 
     if not fExists then
         setName()
+        return
     end
 
     local f = fs.open(config.STATE_DIR .. "/name", "r")
     local contents = f.readAll()
+    f.close()
 
     if contents == "" then
         setName()
@@ -53,7 +55,7 @@ end
 function getName()
     setNameIfNotSet()
 
-    local f = fs.open(config.STATE_DIR .. "/name", "r")
+    local f, x = fs.open(config.STATE_DIR .. "/name", "r")
     local contents = f.readAll()
     f.close()
     return contents
