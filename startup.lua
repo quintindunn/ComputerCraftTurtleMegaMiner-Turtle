@@ -13,4 +13,5 @@ local state = utils.dumpState()
 
 print(state)
 
+shell.run("/update.lua")
 shell.run("/main.lua")
