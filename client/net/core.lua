@@ -8,18 +8,24 @@ function connect()
     ws = http.websocket(config.WS_URL)
     if not ws then
         print("Couldn't connect to websocket!")
+    else
+        sendState()
     end
+
     return ws
 end
 
 function verifyConnected()
     if not ws then
-        error("Not connected to websocket server!")
+        return false
     end
+    return true
 end
 
 function sendJSON(packet)
-    verifyConnected()
+    if not verifyConnected() then
+        return
+    end
     local serialized = textutils.serializeJSON(packet)
 
     ws.send(serialized)

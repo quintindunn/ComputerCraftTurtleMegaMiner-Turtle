@@ -3,15 +3,16 @@ local handler = require("/client/net/handler")
 
 function runLoop()
     local ws = core.connect()
-    core.sendState()
 
     while true do
-        local ok, msg = pcall(ws.receive, ws, 1)
+        local ok, msg = pcall(function()
+            return ws.receive(1)
+        end)
         if not ok then
-            core.clearWS()
             repeat
                 ws = core.connect()
-            until ws
+                sleep(1)
+            until ws ~= nil
         elseif msg then
             handler.handle(msg)
         end
