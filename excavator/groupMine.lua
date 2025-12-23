@@ -1,6 +1,8 @@
 local movement = require("/api/movement")
 local logger = require("/api/logger").getLogger("Main")
 local netCore = require("/client/net/core")
+local utils = require("/api/utils")
+local homeUtils = require("/api/homeLocation")
 
 function notifyIterationStart()
     logger("Starting Iteration")
@@ -36,4 +38,138 @@ function iteration()
     notifyIterationEnd()
 end
 
-return { iteration = iteration }
+function goHome()
+    local coordinates = movement.getCurrentCoordinates()
+    local cx = coordinates[1]
+    local cy = coordinates[2]
+    local cz = coordinates[3]
+
+    local homeCoordinates = homeUtils.getHome()
+    local nx = homeCoordinates[1]
+    local ny = homeCoordinates[2]
+    local nz = homeCoordinates[3]
+
+    local dx = nx - cx
+    local dy = ny - cy
+    local dz = nz - cz
+
+
+    if cx ~= nx and cz ~= nz then
+        logger("Cannot change both X-axis and Z-axis")
+        error("Cannot change both X-axis and Z-axis")
+    end
+
+    -- Go to correct Y
+    if dy > 0 then
+        dy = math.abs(dy)
+        local i = 0
+        while i < dy do
+            if turtle.detectUp() then
+                turtle.digUp()
+            end
+            if not up() then
+                i = i - 1
+            end
+            i = i + 1
+        end
+    elseif dy < 0 then
+        dy = math.abs(dy)
+        local i = 0
+        while i < dy do
+            if turtle.detectDown() then
+                turtle.digDown()
+            end
+            if not down() then
+                i = i - 1
+            end
+            i = i + 1
+        end
+    end
+
+    local dir = utils.getDir()
+
+    if nx ~= cx then
+        local fn = nil
+        if dir == 4 and dx > 0 then
+            fn = movement.back
+        elseif dir == 4 and dx < 0 then
+            fn = movement.forward
+        elseif dir == 2 and dx > 0 then
+            fn = movement.forward
+        elseif dir == 2 and dx < 0 then
+            fn = movement.back
+        end
+
+        dx = math.abs(dx)
+        local i = 0
+        while i < dx do
+            if turtle.detect() then
+            end
+            if not fn() then
+                i = i - 1
+                -- Really hope this doesn't happen because it causes instability
+                if fn == movement.back then
+                    movement.left() 
+                    movement.left()
+                end
+                turtle.dig()
+                if fn == movement.back then
+                    movement.left()
+                    movement.left()
+                end
+            end
+            i = i + 1
+        end
+    else
+        local fn = nil
+        if dir == 3 and dz > 0 then
+            fn = movement.forward
+        elseif dir == 3 and dz < 0 then
+            fn = movement.back
+        elseif dir == 1 and dz > 0 then
+            fn = movement.back
+        elseif dir == 1 and dz < 0 then
+            fn = movement.forward
+        end
+
+        dz = math.abs(dz)
+        local i = 0
+        while i < dz do
+            if turtle.detect() then
+            end
+            if not fn() then
+                i = i - 1
+                -- Really hope this doesn't happen because it causes instability
+                if fn == movement.back then
+                    movement.left() 
+                    movement.left()
+                end
+                turtle.dig()
+                if fn == movement.back then
+                    movement.left()
+                    movement.left()
+                end
+            end
+            i = i + 1
+        end
+    end
+
+end
+
+function refuel()
+    local initialCoordinates = movement.getCurrentCoordinates()
+    goHome()
+
+    local initialSlot = turtle.getSelectedSlot()
+
+    turtle.select(1)
+    while turtle.getFuelLevel() < turtle.getFuelLimit() - 1000 do
+        turtle.placeDown()
+        turtle.refuel()
+    end
+
+    turtle.select(initialSlot)
+    movement.goTo(initialCoordinates[1], initialCoordinates[2], initialCoordinates[3])
+end
+
+return { iteration = iteration, refuel = refuel, goHome = goHome }

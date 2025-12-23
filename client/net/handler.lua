@@ -46,6 +46,10 @@ function rebootHandler()
     shell.run("reboot")
 end
 
+function goHomeHandler()
+    excavator.goHome()
+end
+
 function executeHandler(json)
     local command = json["command"]
     
@@ -97,6 +101,8 @@ function handle(msg)
         rebootHandler(json)
     elseif msgType == "execute" then
         executeHandler(json)
+    elseif msgType == "home" then
+        goHomeHandler(json)
     end
 
 end
