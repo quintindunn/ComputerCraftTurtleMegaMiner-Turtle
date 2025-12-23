@@ -1,4 +1,4 @@
-local core = require("/api/net/core")
+local core = require("/client/net/core")
 
 local msgSendBuffer = {}
 local msgRecvBuffer = {}

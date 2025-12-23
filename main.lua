@@ -1,5 +1,5 @@
-local netCore = require("/api/net/core")
-local eventLoop = require("/api/net/eventLoop")
+local netCore = require("/client/net/core")
+local eventLoop = require("/client/net/eventLoop")
 
 
 netCore.connect()
