@@ -46,6 +46,22 @@ function rebootHandler()
     shell.run("reboot")
 end
 
+function executeHandler(json)
+    local command = json["command"]
+    
+    local fn, err = loadstring(command)
+    if not fn then
+       logger(err)
+    end
+
+    local ok, err = pcall(fn)
+    if not ok then
+        logger(err)
+    end
+end
+
+
+
 function handle(msg)
     local json = textutils.unserializeJSON(msg)
 
@@ -59,26 +75,28 @@ function handle(msg)
     local msgType = json["type"]
 
     if msgType == "moveForward" then
-        moveForwardHandler(msg)
+        moveForwardHandler(json)
         netCore.sendState()
     elseif msgType == "moveUp" then
-        moveUpHandler(msg)
+        moveUpHandler(json)
         netCore.sendState()
     elseif msgType == "moveDown" then
-        moveDownHandler(msg)
+        moveDownHandler(json)
         netCore.sendState()
     elseif msgType == "moveBack" then
-        moveBackHandler(msg)
+        moveBackHandler(json)
         netCore.sendState()
     elseif msgType == "iterate" then
-        iterateHandler(msg)
+        iterateHandler(json)
         netCore.sendState()
     elseif msgType == "dumpUp" then
-        dumpUpHandler(msg)
+        dumpUpHandler(json)
     elseif msgType == "setHome" then
-        setHomeHandler(msg)
+        setHomeHandler(json)
     elseif msgType == "reboot" then
-        rebootHandler(msg)
+        rebootHandler(json)
+    elseif msgType == "execute" then
+        executeHandler(json)
     end
 
 end
