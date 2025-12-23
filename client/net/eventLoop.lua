@@ -1,4 +1,5 @@
 local core = require("/client/net/core")
+local handler = require("/client/net/handler")
 
 local msgSendBuffer = {}
 local msgRecvBuffer = {}
@@ -10,7 +11,7 @@ function runLoop()
     while true do
         local msg = ws.receive(1)
         if msg then
-            print(msg)
+            handler.handle(msg)
         end
     end
 end
