@@ -40,7 +40,7 @@ function dumpUpHandler()
     local role = utils.getRole()
     if role == "miner" then
         logger("Dumping inventory")
-        utils.dumpInventory()
+        excavator.dumpInventory()
     end
 end
 

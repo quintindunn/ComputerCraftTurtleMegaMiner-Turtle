@@ -39,8 +39,24 @@ function iteration()
     notifyIterationEnd()
 end
 
-function moveLinear(nx, ny, nz)
+function dumpInventory()
     notifyIterationStart()
+    local initialSlot = turtle.getSelectedSlot()
+
+    for i = 2, 16 do
+        turtle.select(i)
+        turtle.dropUp(64)
+    end
+
+    turtle.select(initialSlot)
+    notifyIterationEnd()
+end
+
+
+function moveLinear(nx, ny, nz, SkipNotify)
+    if not SkipNotify then
+        notifyIterationStart()
+    end
     local coordinates = movement.getCurrentCoordinates()
     local cx = coordinates[1]
     local cy = coordinates[2]
@@ -152,7 +168,10 @@ function moveLinear(nx, ny, nz)
             i = i + 1
         end
     end
-    notifyIterationEnd()
+
+    if not SkipNotify then
+        notifyIterationEnd()
+    end
 end
 
 function setRestorePoint()
@@ -179,7 +198,7 @@ function goToRestorePoint()
     moveLinear(coordinates[1], coordinates[2], coordinates[3])
 end
 
-function goHome(SkipSetRestorePoint)
+function goHome(SkipSetRestorePoint, SkipNotify)
     if not SkipSetRestorePoint then
         setRestorePoint()
     end
@@ -187,14 +206,14 @@ function goHome(SkipSetRestorePoint)
     local nx = homeCoordinates[1]
     local ny = homeCoordinates[2]
     local nz = homeCoordinates[3]
-    moveLinear(nx, ny, nz)
+    moveLinear(nx, ny, nz, SkipNotify)
 end
 
 function refuel()
     notifyIterationStart()
     local initialCoordinates = movement.getCurrentCoordinates()
 
-    goHome(true)
+    goHome(true, true)
 
     local initialSlot = turtle.getSelectedSlot()
 
@@ -210,4 +229,4 @@ function refuel()
     notifyIterationEnd()
 end
 
-return { goToRestorePoint = goToRestorePoint, iteration = iteration, refuel = refuel, moveLinear = moveLinear, goHome = goHome }
+return { dumpInventory = dumpInventory, goToRestorePoint = goToRestorePoint, iteration = iteration, refuel = refuel, moveLinear = moveLinear, goHome = goHome }
