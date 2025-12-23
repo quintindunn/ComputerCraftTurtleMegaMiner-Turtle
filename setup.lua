@@ -1,4 +1,5 @@
 local movement = require("/api/movement")
+local config = require("/api/config")
 
 write("X: ")
 local x = tonumber(read())
@@ -22,5 +23,16 @@ elseif dir == "w" then
 else
     error("Invalid direction!")
 end
+
+write("Role: (miner/loader): ")
+local role = string.lower(read())
+
+if role ~= "miner" and role ~= "loader" then
+    error("Invalid role!")
+end
+
+local f = fs.open(config.STATE_DIR .. "/role", "w")
+f.write(role)
+f.close()
 
 movement.updateCoordinates({x, y, z})

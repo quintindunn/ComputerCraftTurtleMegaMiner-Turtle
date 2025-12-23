@@ -27,12 +27,21 @@ end
 
 function iterateHandler()
     logger("Running iteration")
-    excavator.iteration()
+    local role = utils.getRole()
+
+    if role == "miner" then
+        excavator.iteration()
+    elseif role == "loader" then
+        movement.forceForward()
+    end
 end
 
 function dumpUpHandler()
-    logger("Dumping inventory")
-    utils.dumpInventory()
+    local role = utils.getRole()
+    if role == "miner" then
+        logger("Dumping inventory")
+        utils.dumpInventory()
+    end
 end
 
 function setHomeHandler()

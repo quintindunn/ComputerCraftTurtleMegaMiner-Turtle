@@ -3,4 +3,5 @@ state/coordinates.json.copy
 state/dir
 state/name
 state/home
+state/role
 .cache/*
