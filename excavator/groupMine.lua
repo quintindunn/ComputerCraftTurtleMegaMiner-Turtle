@@ -193,6 +193,7 @@ end
 function refuel()
     notifyIterationStart()
     local initialCoordinates = movement.getCurrentCoordinates()
+
     goHome(true)
 
     local initialSlot = turtle.getSelectedSlot()
@@ -204,7 +205,7 @@ function refuel()
     end
 
     turtle.select(initialSlot)
-    movement.goTo(initialCoordinates[1], initialCoordinates[2], initialCoordinates[3])
+    moveLinear(initialCoordinates[1], initialCoordinates[2], initialCoordinates[3])
     notifyIterationEnd()
 end
 
