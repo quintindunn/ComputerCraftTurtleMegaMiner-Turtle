@@ -40,6 +40,12 @@ function setHomeHandler()
     homeUtils.setHome()
 end
 
+function rebootHandler()
+    logger("Rebooting!")
+    netCore.disconnect()
+    shell.run("reboot")
+end
+
 function handle(msg)
     local json = textutils.unserializeJSON(msg)
 
@@ -71,6 +77,8 @@ function handle(msg)
         dumpUpHandler(msg)
     elseif msgType == "setHome" then
         setHomeHandler(msg)
+    elseif msgType == "reboot" then
+        rebootHandler(msg)
     end
 
 end
