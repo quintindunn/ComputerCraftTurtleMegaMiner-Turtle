@@ -17,6 +17,19 @@ function numericalOrientationToString(orientation)
     end
 end
 
+function getRole()
+    local fExists = fs.exists(config.STATE_DIR .. "/role")
+    if not fExists then
+        error("Role missing, run setup!")
+    end
+
+    local f = fs.open(config.STATE_DIR .. "/role", "r")
+    local content = f.readAll()
+    f.close()
+
+    return content
+end
+
 function calibrateOrientation()
     logger("Direction calibration offline!")
 end
@@ -83,5 +96,5 @@ function dumpState()
     return output
 end
 
-return { dumpInventory = dumpInventory, getDir = getDir, dumpState = dumpState, calibrateOrientation = calibrateOrientation, numericalOrientationToString = numericalOrientationToString, doRefuel = doRefuel, doRefuelIfNeeded = doRefuelIfNeeded }
+return { getRole = getRole, dumpInventory = dumpInventory, getDir = getDir, dumpState = dumpState, calibrateOrientation = calibrateOrientation, numericalOrientationToString = numericalOrientationToString, doRefuel = doRefuel, doRefuelIfNeeded = doRefuelIfNeeded }
 

@@ -200,6 +200,7 @@ function refuel()
 
     turtle.select(1)
     while turtle.getFuelLevel() < turtle.getFuelLimit() - 1000 do
+        
         turtle.placeDown()
         turtle.refuel()
     end
