@@ -7,7 +7,7 @@ local logger = require("/api/logger").getLogger("Handler")
 
 function moveForwardHandler()
     logger("Moving forward")
-    movement.forward()
+    movement.forceForward()
 end
 
 function moveUpHandler()
